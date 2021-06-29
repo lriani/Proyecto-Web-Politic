@@ -5,7 +5,10 @@ from django.http import JsonResponse
 
 from store.models import Product
 from .basket import Basket
+from django.contrib.auth.decorators import login_required
 
+
+@login_required
 def basket_summary(request):
     basket = Basket(request)
     return render(request, 'store/basket/summary.html',{'basket': basket})

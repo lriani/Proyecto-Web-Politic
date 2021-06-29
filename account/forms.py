@@ -18,7 +18,7 @@ class UserLoginForm(AuthenticationForm):
 class RegistrationForm(forms.ModelForm):
 
     user_name = forms.CharField(label='Nombre de usuario', min_length=4, max_length=50, help_text='Requerido')
-    email = forms.EmailField(label='email', max_length=100, help_text='Requerido', error_messages={'Requerido': 'Lo lamento, necesitas colocar un email'})
+    email = forms.EmailField(label='Email', max_length=100, help_text='Requerido', error_messages={'Requerido': 'Lo lamento, necesitas colocar un email'})
     password= forms.CharField(label='Contraseña', widget=forms.PasswordInput)
     password2= forms.CharField(label='Repite contraseña', widget=forms.PasswordInput)
 
@@ -31,12 +31,12 @@ class RegistrationForm(forms.ModelForm):
         r = UserBase.objects.filter(user_name=user_name)
         if r.count():
             raise forms.ValidationError("El usuario ya existe")
-            return user_name
+        return user_name
     
     def clean_password2(self):
         cd = self.cleaned_data
         if cd['password'] != cd['password2']:
-            raise forms.ValidationError('Contraseña incorrecta')
+            raise forms.ValidationError('Ambas contraseñas no coinciden')
         return cd['password2']
 
     def clean_email(self):

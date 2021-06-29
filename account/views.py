@@ -12,19 +12,14 @@ from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 
 from .models import UserBase
-
-@login_required
-def dashboard(request):
-    return render(request,
-                'account/user/dashboard.html')
-
+   
 def account_register(request):
     if request.method == 'POST':
         registerForm = RegistrationForm(request.POST)
         if registerForm.is_valid():
             user = registerForm.save(commit=False)
             user.email =registerForm.cleaned_data['email']
-            user.set_password(registerForm.cleaned_data['contraseña'])    
+            user.set_password(registerForm.cleaned_data['password'])    
             user.is_active = False
             user.save()
 
@@ -36,7 +31,7 @@ def account_register(request):
                 'uid': urlsafe_base64_encode(force_bytes(user.pk)),
                 'token': account_activation_token.make_token(user), 
             })
-            user.email_user(subject=subject, message=message)
+            user.email_user(subject=subject, message=message),
             return HttpResponse('Registrado con éxito y activación enviada')
 
     else: 
@@ -54,6 +49,6 @@ def account_activate(request, uidb64, token):
         user.is_active = True
         user.save()
         login(request, user)
-        return redirect('account:dashboard')
+        return redirect('store:basket:summary')
     else:
         return render(request, 'account/registration/activation_invalid.html')

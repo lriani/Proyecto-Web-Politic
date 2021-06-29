@@ -1,5 +1,5 @@
-from account.views import account_register
-from datetime import time 
+from . import views
+from datetime import time
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from six import text_type
 
@@ -12,5 +12,3 @@ class AccountActivationTokenGenerator(PasswordResetTokenGenerator):
             )
 
 account_activation_token = AccountActivationTokenGenerator()
-
-        
