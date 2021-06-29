@@ -4,7 +4,7 @@ Hola {{ user.user_name }},
 Tu cuenta ha sido creada con éxito. Por favor haga click
 en el link para activarla
 
-http://{{ domain }}{% url 'account:activate' uid64=uid token=token %}
+http://{{ domain }}{% url 'account:activate' uidb64=uid token=token %}
 
 {% endautoescape %}
 

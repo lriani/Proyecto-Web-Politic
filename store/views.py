@@ -1,6 +1,8 @@
+from django.db.models import query
+from django.db.models.query import QuerySet
 from django.shortcuts import get_object_or_404, render
-
 from .models import Category, Product  
+from django.db.models import Q
 
 def product_all (request):
     products = Product.objects.filter(is_active=True)
@@ -24,3 +26,10 @@ def about(request):
 
 def contact(request):
     return render(request, "store/contact.html")
+    
+
+def search(request):
+    Q = request.GET.get('Q', '') 
+    QuerySet= (Q(title_nombre_icontains=Q)) | (Q(description_nombre_icontains=Q))
+    products = Product.objects.filter(QuerySet)
+    return render(request, 'store/search.html', {'products': products})
