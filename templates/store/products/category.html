@@ -4,8 +4,16 @@
 
 {% block content%}
 
-<div class="album py-5 bg-light">
-    <div class="container">
+<style>
+.img-fluid{
+  width: 70%;
+  height: 70%;
+  margin-left: 10%;
+}
+</style>
+
+<div class="album py-5">
+    <div class="container-fluid">
 
       <div class= "pb-3 h5">{{category.name|title}}</div>   
       <div class="row row-col-xs-4">
@@ -13,7 +21,7 @@
         {% for product in products %}
 
         <div class="col">
-          <div class="card shadow-sm">
+          <div class="card border-0">
             <img class="img-fluid" alt="Responsive image" src="{{ product.image.url }}">
             <div class="card-body">
               <p class="card-text">

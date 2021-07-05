@@ -1,19 +1,13 @@
 from django import forms
 from .models import UserBase
+from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth.forms import (AuthenticationForm)
 
 
 class UserLoginForm(AuthenticationForm):
     
-    username = forms.CharField(widget=forms.TextInput(
-        attrs={'class': 'form-control mb-3', 'placeholder': 'Username', 'id': 'login-username'}))
-    password = forms.CharField(widget=forms.TextInput(
-        attrs={
-            'class': 'form-control',
-            'placeholder': 'Password',
-            'id': 'login-pwd',
-        }
-    ))
+    username = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control mb-3', 'placeholder': 'Usuario'}))
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Password',}))
 
 class RegistrationForm(forms.ModelForm):
 
@@ -24,7 +18,7 @@ class RegistrationForm(forms.ModelForm):
 
     class Meta:
         model = UserBase
-        fields = ('user_name', 'email')
+        fields = ('user_name', 'email', 'password', 'password2')
 
     def clean_username(self):
         user_name = self.cleaned_data['user_name'].lower()
@@ -33,17 +27,17 @@ class RegistrationForm(forms.ModelForm):
             raise forms.ValidationError("El usuario ya existe")
         return user_name
     
-    def clean_password2(self):
-        cd = self.cleaned_data
-        if cd['password'] != cd['password2']:
-            raise forms.ValidationError('Ambas contraseñas no coinciden')
-        return cd['password2']
+    def clean_password(self):
+        password = self.cleaned_data['password']
+        validate_password(password)
+        return password
+
 
     def clean_email(self):
         email = self.cleaned_data['email']
         if UserBase.objects.filter(email=email).exists():
             raise forms.ValidationError('Por favor coloque otro mail, éste ya fue usado')
-        return email
+        return email   
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

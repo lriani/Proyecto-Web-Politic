@@ -1,0 +1,15 @@
+{% extends "store/base.html" %}
+{% load static %}
+{% block content %}
+
+<body>
+    {% load crispy_forms_tags %}
+    <form method = "post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ agregar|crispy }}   
+        <button type="submit">Upload</button>
+    </form>
+</body>
+
+
+{% endblock %}

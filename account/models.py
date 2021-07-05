@@ -20,17 +20,23 @@ class CustomAccountManager(BaseUserManager):
                 'Superuser must be assigned to is_superuser=True.')
 
         return self.create_user(email, user_name, password, **other_fields)
-
-    def create_user (self, email, user_name, password, **other_fields):
-
-        if not email:
-            raise ValueError(_('Debes colocar una dirección de email'))
+    
+    def create_staffuser(self, email, user_name, password, **other_fields):
+        
+        other_fields.setdefault('is_staff', True)
 
         email = self.normalize_email(email)
         user = self.model(email=email, user_name=user_name, **other_fields)
         user.set_password(password)
         user.save()
         return user
+
+
+    def create_user (self, email, user_name, password, **other_fields):
+
+        self.user_name = user_name
+        self.email = email
+        self.password = password
 
 
 class UserBase(AbstractBaseUser, PermissionsMixin):

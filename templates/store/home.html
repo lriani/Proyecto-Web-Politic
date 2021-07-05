@@ -1,18 +1,29 @@
 {% extends "./base.html" %}
 {% load static %}
 {% block title %}Tienda de Espejos{% endblock %}
+
 {% block content%}
 
-<main>
+<style>
+.img-fluid{
+  max-width: 80%;
+  height: auto;
+  margin-left: 10%;
+}
+p{
+  text-align:center;
+}
+</style>
+
+<body>
 
   <div class="album py-5">
-    <div class="container">
+    <div class="container-fluid">
 
       <div class= "pb-3">
       </div>
       <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-
-        {% for product in products%}
+        {% for product in list_productimage %}
 
         <div class="col">
           <div class="card border-0">
@@ -21,16 +32,33 @@
               <p class="card-text">
               <a class="text-dark text-decoration-none" href="{{ product.get_absolute_url }}">{{ product.title|slice:":50" }}...</a>
               </p>
-              <div class="fw-bold">${{product.price}}</div>
+              <div style="text-align:center"; class="fw-bold">${{product.price}}</div>
             </div>
           </div>
         </div>
-
         {% endfor %}
-        
       </div>
+        <div class="moreproducts">
+          <div class="container-center">
+          <p style="font-size: 40px";>Más productos</p>
+          <br>
+          <ul>
+              {% for product in list_productSinimage %}
+                <div class="list-group">
+                  <a href="{{ product.get_absolute_url }}" class="list-group-item active" style="background-color: white ! important;">
+                  <h4 style="color:black"; class="list-group-item-heading">{{ product.title }}</h4>
+                  <p style="color:black"; class="list-group-item-text">{{ product.description }}</p>
+                  </a>
+                </div>
+              {% endfor %}
+          </ul>
+          </div>
+        </div>            
+        
+      
     </div>
   </div>   
 
-</main> 
+</body> 
+
 {% endblock %}

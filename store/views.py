@@ -1,12 +1,32 @@
-from django.db.models import query
-from django.db.models.query import QuerySet
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, render, redirect
 from .models import Category, Product  
 from django.db.models import Q
+from django.db.models import query
+from django import forms
+from .forms import *
+from django.contrib import messages
+
+product = Product.objects.all()
+
+productWhithImage= []
+productWhithoutImage= []
+for i in range(7):
+    if (i <= 2):
+        productWhithImage.append(product[i])
+    else:
+        productWhithoutImage.append(product[i])
 
 def product_all (request):
-    products = Product.objects.filter(is_active=True)
-    return render(request, 'store/home.html', {'products': products})
+    list_productimage = Product.objects.all().order_by("-id")[:3]
+    list_productSinimage = Product.objects.all().order_by("-id")[3:10]
+
+    def get(self, request, *args, **kwargs):
+            return render (request, self.template_name, {"self.list_productimage": list_productimage, "self.list_productSinimage": list_productSinimage})
+    
+    return render(request, 'store/home.html', {
+            "list_productimage": productWhithImage,
+            "list_productSinimage": productWhithoutImage,
+        })
 
 
 def category_list(request, category_slug):
@@ -28,8 +48,45 @@ def contact(request):
     return render(request, "store/contact.html")
     
 
-def search(request):
-    Q = request.GET.get('Q', '') 
-    QuerySet= (Q(title_nombre_icontains=Q)) | (Q(description_nombre_icontains=Q))
-    products = Product.objects.filter(QuerySet)
-    return render(request, 'store/search.html', {'products': products})
+def search(request):    
+    query=None
+    results=[]
+    if request.method == "GET":
+        query = request.GET.get('search')
+        results = Product.objects.filter(Q(title__icontains=query) | Q(description__icontains=query))
+        return render(request, 'store/search.html', {'query': query, 'results':results})
+    else:
+        return render(request, 'store/search.html')
+      
+
+def new_product(request, *args, **kwargs):
+    if request.method == 'POST':
+        form = ArticuloForm(request.POST, request.FILES, instance=product)
+        if form.is_valid():
+            form.save()
+            return redirect('/') 
+    else:       
+        form = ArticuloForm()
+    return render(
+        request=request,
+        template_name='store/new_product.html',
+        context={'agregar': form})
+
+
+def edition_product(request, product_id):
+    product_id = Product.objects.get(product=product_id)
+    if request.method == 'POST':
+        form = UpdateArticuloForm(request.POST, request.FILES, instance=product)
+        if form.is_valid():
+            form.save()
+            return redirect('store/home.html')         
+    else:
+        form = UpdateArticuloForm(instance=product)
+        return render(request, 'store/edition_product.html'), {'product': product, 'form': form }
+
+def delete_product_db(request, product_id):
+    product= Product.objects.get(id=product_id)
+    product.delete()
+    messages.succes(request, 'Producto eliminado')
+    return redirect('home')
+

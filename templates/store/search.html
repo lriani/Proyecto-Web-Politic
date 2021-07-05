@@ -1,3 +1,25 @@
 {% extends "store/base.html" %}
 {% load static %}
-{% block title %}Bucador{% endblock %}
+{% block title %}Buscador{% endblock %}
+
+
+{% block content%}
+    <justify>
+    {% if query %}
+    <h1>Listado de productos "{{ query }}"</h1>
+            <h3>
+            {% with results.count as total_results %}
+            Encontré {{ total_results }} resultado{{ total_results|pluralize }}
+            {% endwith %}
+            </h3>
+        {% for c in results %}
+        <a herf="{{c.get_absolute_url}}"><h3>{{c.title}} - {{c.description}}</h3></a>
+       
+        
+        {% empty %}
+        <h4>No hay resultados para tu búsqueda</h4>
+        {% endfor %}
+
+    {% endif %}
+    <justify>
+{% endblock %}
