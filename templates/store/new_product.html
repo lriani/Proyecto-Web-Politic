@@ -7,7 +7,7 @@
     <form method = "post" enctype="multipart/form-data">
         {% csrf_token %}
         {{ agregar|crispy }}   
-        <button type="submit">Upload</button>
+    <button type="btn btn-outline-success" value="{{ product.id}}">Agregar Producto</button>
     </form>
 </body>
 

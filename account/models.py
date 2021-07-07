@@ -34,9 +34,13 @@ class CustomAccountManager(BaseUserManager):
 
     def create_user (self, email, user_name, password, **other_fields):
 
-        self.user_name = user_name
-        self.email = email
-        self.password = password
+        other_fields.setdefault('is_active', True)
+        
+        email = self.normalize_email(email)
+        user = self.model(email=email, user_name=user_name, **other_fields)
+        user.set_password(password)
+        user.save()
+        return user
 
 
 class UserBase(AbstractBaseUser, PermissionsMixin):
@@ -57,8 +61,8 @@ class UserBase(AbstractBaseUser, PermissionsMixin):
 
     objects = CustomAccountManager()
 
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['user_name']
+    USERNAME_FIELD = 'user_name'
+    REQUIRED_FIELDS = ['email']
 
     class Meta:
         verbose_name = "Account"

@@ -4,6 +4,11 @@ from django.http import HttpResponseRedirect
 from django.contrib.auth import login
 from .forms import RegistrationForm
 from .forms import *
+from django.shortcuts import redirect
+from django.template.loader import render_to_string
+
+
+from .models import UserBase
    
 def account_register(request):
     if request.method == 'POST':

@@ -10,7 +10,7 @@ product = Product.objects.all()
 
 productWhithImage= []
 productWhithoutImage= []
-for i in range(7):
+for i in range(10):
     if (i <= 2):
         productWhithImage.append(product[i])
     else:
@@ -59,12 +59,13 @@ def search(request):
         return render(request, 'store/search.html')
       
 
-def new_product(request, *args, **kwargs):
+def new_product(request):
     if request.method == 'POST':
-        form = ArticuloForm(request.POST, request.FILES, instance=product)
+        form = ArticuloForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
-            return redirect('/') 
+            messages.success(request, 'Producto creado con exito')
+            return redirect('store:new_product') 
     else:       
         form = ArticuloForm()
     return render(
@@ -74,12 +75,12 @@ def new_product(request, *args, **kwargs):
 
 
 def edition_product(request, product_id):
-    product_id = Product.objects.get(product=product_id)
+    product = Product.objects.get(id=product_id)
     if request.method == 'POST':
         form = UpdateArticuloForm(request.POST, request.FILES, instance=product)
         if form.is_valid():
             form.save()
-            return redirect('store/home.html')         
+            return redirect('/')         
     else:
         form = UpdateArticuloForm(instance=product)
         return render(request, 'store/edition_product.html'), {'product': product, 'form': form }

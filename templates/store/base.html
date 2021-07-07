@@ -33,13 +33,13 @@ body{
   <div class="b-example-divider"></div>
 
   <header class="pb-3">
-    <div class="container d-flex justify-content-center">
-      <a href="/" class="d-flex mb-3 mb-lg-0 me-lg-auto text-dark text-decoration-none">
+    <div class="container-fluid">
+      <a href="/">
           <img id="logo"
           src="https://d3ugyf2ht6aenh.cloudfront.net/stores/001/419/788/themes/style/img-310053922-1605499605-0c8cb140602709757c1e0849971cb71b1605499605.png?1560115928"
           alt="mdo" class="rounded-circle">
       </a>
-      <ul class="nav">
+      <ul class="nav" style= "float: right">
 
             {% if user.is_authenticated %}
 
@@ -62,7 +62,6 @@ body{
             </li>
 
               {% endif %}
-
 
             <li class="nav-item"><a type= "button" role="button" href="{% url "account:register" %}" class="btn btn-outline-secondary">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person" viewBox="0 0 16 16">
